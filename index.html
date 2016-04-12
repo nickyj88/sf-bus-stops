@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/label.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <script src="js/leaflet.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/label.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="data/json_sfbusstops20120.js"></script>
+        <script>
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[40.6821570548,-74.0597678858],[40.7521035942,-73.9505995537]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var feature_group = new L.featureGroup([]);
+        var bounds_group = new L.featureGroup([]);
+        var raster_group = new L.LayerGroup([]);
+        var basemap0 = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>,<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        var layerOrder = new Array();
+        function stackLayers() {
+            for (index = 0; index < layerOrder.length; index++) {
+                map.removeLayer(layerOrder[index]);
+                map.addLayer(layerOrder[index]);
+            }
+        }
+        function restackLayers() {
+            for (index = 0; index < layerOrder.length; index++) {
+                layerOrder[index].bringToFront();
+            }
+        }
+        layerControl = L.control.layers({},{},{collapsed:false});
+        function pop_sfbusstops20120(feature, layer) {
+            var popupContent = '<table><tr><th scope="row">gid</th><td>' + (feature.properties['gid'] !== null ? Autolinker.link(String(feature.properties['gid'])) : '') + '</td></tr><tr><th scope="row">stopname</th><td>' + (feature.properties['stopname'] !== null ? Autolinker.link(String(feature.properties['stopname'])) : '') + '</td></tr><tr><th scope="row">trapezesto</th><td>' + (feature.properties['trapezesto'] !== null ? Autolinker.link(String(feature.properties['trapezesto'])) : '') + '</td></tr><tr><th scope="row">rucusstopa</th><td>' + (feature.properties['rucusstopa'] !== null ? Autolinker.link(String(feature.properties['rucusstopa'])) : '') + '</td></tr><tr><th scope="row">stopid</th><td>' + (feature.properties['stopid'] !== null ? Autolinker.link(String(feature.properties['stopid'])) : '') + '</td></tr><tr><th scope="row">latitude</th><td>' + (feature.properties['latitude'] !== null ? Autolinker.link(String(feature.properties['latitude'])) : '') + '</td></tr><tr><th scope="row">longitude</th><td>' + (feature.properties['longitude'] !== null ? Autolinker.link(String(feature.properties['longitude'])) : '') + '</td></tr><tr><th scope="row">accessibil</th><td>' + (feature.properties['accessibil'] !== null ? Autolinker.link(String(feature.properties['accessibil'])) : '') + '</td></tr><tr><th scope="row">atstreet</th><td>' + (feature.properties['atstreet'] !== null ? Autolinker.link(String(feature.properties['atstreet'])) : '') + '</td></tr><tr><th scope="row">onstreet</th><td>' + (feature.properties['onstreet'] !== null ? Autolinker.link(String(feature.properties['onstreet'])) : '') + '</td></tr><tr><th scope="row">position</th><td>' + (feature.properties['position'] !== null ? Autolinker.link(String(feature.properties['position'])) : '') + '</td></tr><tr><th scope="row">orientatio</th><td>' + (feature.properties['orientatio'] !== null ? Autolinker.link(String(feature.properties['orientatio'])) : '') + '</td></tr><tr><th scope="row">servicepla</th><td>' + (feature.properties['servicepla'] !== null ? Autolinker.link(String(feature.properties['servicepla'])) : '') + '</td></tr><tr><th scope="row">shelter</th><td>' + (feature.properties['shelter'] !== null ? Autolinker.link(String(feature.properties['shelter'])) : '') + '</td></tr><tr><th scope="row">insert_tim</th><td>' + (feature.properties['insert_tim'] !== null ? Autolinker.link(String(feature.properties['insert_tim'])) : '') + '</td></tr><tr><th scope="row">signupid</th><td>' + (feature.properties['signupid'] !== null ? Autolinker.link(String(feature.properties['signupid'])) : '') + '</td></tr><tr><th scope="row">supervisor</th><td>' + (feature.properties['supervisor'] !== null ? Autolinker.link(String(feature.properties['supervisor'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStylesfbusstops20120() {
+            return {
+                radius: 2.0,
+                fillColor: '#938fe8',
+                color: '#000000',
+                weight: 0.0,
+                opacity: 1.0,
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                fillOpacity: 1.0
+            }
+        }
+        function doPointToLayersfbusstops20120(feature, latlng) {
+            return L.circleMarker(latlng, doStylesfbusstops20120())
+        }
+        var json_sfbusstops20120JSON = new L.geoJson(json_sfbusstops20120, {
+            onEachFeature: pop_sfbusstops20120, 
+            pointToLayer: doPointToLayersfbusstops20120
+            });
+        var cluster_groupsfbusstops20120JSON = new L.MarkerClusterGroup({showCoverageOnHover: false});
+        cluster_groupsfbusstops20120JSON.addLayer(json_sfbusstops20120JSON);
+
+        layerOrder[layerOrder.length] = cluster_groupsfbusstops20120JSON;
+
+        bounds_group.addLayer(json_sfbusstops20120JSON);
+        cluster_groupsfbusstops20120JSON.addTo(map);
+        var overlay_ManhattanNYpointsofinterest1 = L.tileLayer.wms('http://45.33.40.104:8080/geoserver/tiger/wms?', {
+            layers: 'poi',
+            format: 'image/png',
+            transparent: true,
+            continuousWorld : true,
+        });
+        raster_group.addLayer(overlay_ManhattanNYpointsofinterest1);
+        raster_group.addTo(map);
+        feature_group.addTo(map);
+        stackLayers();
+        map.on('overlayadd', restackLayers);
+        </script>
+    </body>
+</html>
